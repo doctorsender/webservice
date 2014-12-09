@@ -1,0 +1,4 @@
+services:
+    doctorsender:
+        class: Doctorsender\APIBundle\Services\Doctorsender
+        arguments: [%doctorsender.url%,%doctorsender.user%,%doctorsender.token%]
