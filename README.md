@@ -6,7 +6,7 @@ Doctorsender webservice to manage campaings, lists, users, etc..
 ##Install
 
 ```
-composer require doctorsender/webservice
+composer require doctorsender/webservice:dev-master
 ```
 
 Add it to your AppKernel.php
@@ -30,7 +30,7 @@ doctorsender_api:
     token: "your_api_token"
 ```
 
-You can get your doctorsender ID from http://doctorsender.com
+You can get your doctorsender ID from [DOCTORSENDER](http://doctorsender.com/en/register)
 
 You can override the api endpoint url by adding yourself the key [url]
 

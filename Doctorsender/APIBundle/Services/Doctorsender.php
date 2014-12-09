@@ -21,6 +21,14 @@ class Doctorsender
         $this->client->__setSoapHeaders($header);
     }
 
+   protected function processResponse($response){
+     if (!is_array($response) || !isset($response['msg']) || $response['error'] == 1 ) {
+       throw new DoctorsenderResponseException($response);
+     }
+     return $response['msg'];
+   }
+
+
     /**
      * @param      $name
      * @param      $subject
@@ -75,11 +83,8 @@ class Doctorsender
             $utmContent,
             $footerDs,
             $mirrorDs);
-        if ($results['error'] == 1 || !is_array($results)) {
-            throw new DoctorsenderResponseException($results['msg']);
-        }
+      return $this->processResponse($results);
 
-        return $results['msg'];
     }
 
     /**
@@ -93,116 +98,109 @@ class Doctorsender
     public function dsCampaignUpdate($campaign_id, $html, $track = true, $returnHtml = true)
     {
         $results = $this->proxy->webservice('dsCampaignUpdate', array($campaign_id, $html, stripslashes($html)));
-        if ($results['error'] == 1 || !is_array($results)) {
-            throw new \Exception($results['msg']);
-        }
-
-        return $results['msg'];
+      return $this->processResponse($results);
     }
 
-    /**
-     * @param      $campaign_id
-     * @param      $users
-     * @param bool $isTest default true
-     * @return Mixed
-     * @throws \Exception
-     */
-    public function sendUsers($campaign_id, $users, $isTest = true)
+  /**
+   * Send a campaign to an array of contacts
+   *
+   * @param $idCampaign
+   * @param $contacts    The list of Contact information to be sent. Each contact has to be an associated array with user data. Email field its required.
+   * @param $ipGroupName Name of the ipGroup where the campaign will be sent. All ipGroupNames are returned by dsIpGroupGetNames() method.
+   * @return mixed
+   */
+  public function dsCampaignSendEmails(		 	$idCampaign, 	$contacts, 	$ipGroupName )
     {
-        $results = $this->proxy->webservice('sendUsers', array('campaign_id' => $campaign_id, $users, $isTest));
-        if ($results['error'] == 1 || !is_array($results)) {
-            throw new \Exception($results['msg']);
-        }
-
-        return $results['msg'];
+        $results = $this->proxy->webservice('dsCampaignSendEmails', array($idCampaign, $contacts, $ipGroupName));
+      return $this->processResponse($results);
     }
 
-    /**
-     * @param       $listName
-     * @param array $header
-     * @param array $data
-     * @return mixed
-     * @throws \Exception
-     */
-    public function createList($listName, array $header, array $data)
-    {
-        $resultado = $this->proxy->webservice('createList', array($listName, $header, $data, true));
-        if ($resultado['error'] == 1 || !is_array($resultado)) {
-            throw new \Exception($resultado['msg']);
-        }
+  /**
+   * Create a new User List
+   *
+   * @param      $listName
+   * @param      $header
+   * @param      $isTestList
+   * @param bool $deleteIfExist
+   * @return mixed
+   */
+  public function dsUsersListNew	($listName, $header,  $isTestList,   $deleteIfExist = false  )
+  {
+    $results = $this->proxy->webservice('dsUsersListNew', array($listName, $header,  $isTestList,   $deleteIfExist));
+    return $this->processResponse($results);
+  }
 
-        return $resultado['msg'];
-    }
+  /**
+   * Add Users to a List
+   *
+   * @param $listName
+   * @param $data        List of associative arrays with user data. Each user must contain all the indicated values when creating a list
+   * @param $isTestList
+   * @return mixed
+   */
+  public function dsUsersListAdd	( 	$listName, $data, $isTestList )
+  {
+    $results = $this->proxy->webservice('dsUsersListAdd', array($listName, $data, $isTestList ));
+    return $this->processResponse($results);
+  }
 
-    /**
-     * @param       $listName
-     * @param array $data
-     * @param bool  $createTable
-     * @return mixed
-     * @throws \Exception
-     */
-    public function addUsersToListbyListname($listName, array $data, $createTable = false)
-    {
-        $resultado = $this->proxy->webservice('addUsersToListbyListname', array($listName, $data, $createTable));
-        if ($resultado['error'] == 1 || !is_array($resultado)) {
-            throw new \Exception($resultado['msg']);
-        }
 
-        return $resultado['msg'];
-    }
 
-    /**
-     * @param      $listName
-     * @param      $rate
-     * @param      $idCamp
-     * @param int  $isTest
-     * @param int  $segmentId
-     * @param bool $ab_test
-     * @param int  $partitionId
-     * @param int  $limit
-     * @param bool $autodelete
-     * @return mixed
-     * @throws \Exception
-     */
-    public function sendList($listName, $rate, $idCamp, $isTest = 0, $segmentId = 0, $ab_test = false, $partitionId = 0, $limit = 0, $autodelete = false)
-    {
-        $resultado = $this->proxy->webservice('sendList', array("list_" . $listName, $rate, $idCamp, $isTest, $segmentId, $ab_test, $partitionId, $limit, $autodelete));
-        if ($resultado['error'] == 1 || !is_array($resultado)) {
-            throw new \Exception($resultado['msg']);
-        }
+  /**
+   * Get all the ipGroup names assigned. A $ipGroupName is required to send a campaign so this method must be called to obtain this parameter.
+   *
+   * @return mixed
+   */
+  public function dsIpGroupGetNames(		  )
+  {
+    $results = $this->proxy->webservice('dsIpGroupGetNames', array());
+    return $this->processResponse($results);
+  }
 
-        return $resultado['msg'];
-    }
+  /**
+   * Send the campaign to a list. Only one list can be launched with each campaign.
+   *
+   * @param        $idCampaign
+   * @param        $listName
+   * @param        $ipGroupName    Name of the ipGroup where the campaign will be sent. All ipGroupNames are returned by dsIpGroupGetNames() method.
+   * @param int    $speed
+   * @param int    $segmentId
+   * @param int    $partitionId
+   * @param int    $amount
+   * @param bool   $autoDeleteList
+   * @param string $programmed
+   * @return mixed
+   */
+public function dsCampaignSendList	(	 	$idCampaign,$listName,$ipGroupName,$speed = 1,$segmentId = 0,$partitionId = 0,$amount = 0,$autoDeleteList = False,$programmed = ""){
+  $results = $this->proxy->webservice('dsCampaignSendList', array($idCampaign,$listName,$ipGroupName,$speed,$segmentId,$partitionId,$amount,$autoDeleteList,$programmed));
+  return $this->processResponse($results);
+}
 
-    /**
-     * @param $idcampaign
-     * @param $truncate
-     * @return mixed
-     * @throws \Exception
-     */
-    public function resetCampaign($idcampaign, $truncate)
-    {
-        $resultado = $this->proxy->webservice('resetCampaign', array($idcampaign, $truncate));
-        if ($resultado['error'] == 1 || !is_array($resultado)) {
-            throw new \Exception($resultado['msg']);
-        }
+  /**
+   * Send the campaign to a test list.
+   *
+   * @param $idCampaign  The campaign identifier
+   * @param $listName    The name of the test list
+   * @return mixed
+   */
+  public function dsCampaignSendListTest	(	 	$idCampaign,$listName){
+    $results = $this->proxy->webservice('dsCampaignSendListTest', array(	$idCampaign,$listName));
+    return $this->processResponse($results);
+  }
 
-        return $resultado['msg'];
-    }
+  /**
+   * Get the campaign data. You can specify more or less fields to show in response.
+   *
+   * @param       $idCampaign The campaign identifier
+   * @param array $fields     ["name","amount","subject","from_name","from_email","sender","html","text","reply_to","list_unsubscribe","speed","send_date","status","user_list","country","utm_source","utm_medium","utm_term","utm_content","utm_campaign"]
+   * @param int   $extraInfo  Add statistic extra info [0: none, 1: statistics, 2: statistics without unique values]
+   * @return mixed
+   */
+  public function dsCampaignGet	(	 	$idCampaign, $fields = array("name", "amount", "subject", "html", "text", "list_unsubscribe", "send_date", "status", "user_list", "country"), $extraInfo = 0 ){
+    $results = $this->proxy->webservice('dsCampaignGet', array(		$idCampaign, $fields, $extraInfo));
+    return $this->processResponse($results);
+  }
 
-    /**
-     * @param $campaign_id
-     * @return mixed
-     * @throws \Exception
-     */
-    public function getResumenStats($campaign_id)
-    {
-        $results = $this->proxy->webservice('getResumenStats', array('campaign_id' => $campaign_id));
-        if ($results['error'] == 1 || !is_array($results)) {
-            throw new \Exception($results['msg']);
-        }
 
-        return $results['msg'];
-    }
 
 } 
