@@ -16,7 +16,6 @@
         "symfony/framework-bundle": ">=2.0.0"
     },
     "autoload": {
-        "psr-0": {"Doctorsender\\APIBundle": ""}
-    },
-    "target-dir": "Doctorsender/APIBundle"
+        "psr-4": {"Doctorsender\\APIBundle": "Doctorsender/APIBundle"}
+    }
 }
