@@ -9,6 +9,17 @@ Doctorsender webservice to manage campaings, lists, users, etc..
 composer require doctorsender/webservice
 ```
 
+Add it to your AppKernel.php
+
+```
+public function registerBundles()
+    {
+        $bundles = array(
+            ...
+            new Doctorsender\APIBundle\DoctorsenderAPIBundle()
+        );
+```
+
 ##Configure
 
 Add in your config.yml or import configuration file.
