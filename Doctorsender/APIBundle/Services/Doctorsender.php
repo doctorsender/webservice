@@ -21,7 +21,7 @@ class Doctorsender
         $this->token = $token;
         $this->proxy = new \SoapClient($this->url, array('trace' => true, 'cache_wsdl' => WSDL_CACHE_NONE));
         $header      = new SoapHeader("ns1", "app_auth", array("user" => $this->user, "pass" => $this->token));
-        $this->client->__setSoapHeaders($header);
+        $this->proxy->__setSoapHeaders($header);
     }
 
    protected function processResponse($response){
