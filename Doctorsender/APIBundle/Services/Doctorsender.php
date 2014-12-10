@@ -49,40 +49,9 @@ class Doctorsender
      * @return mixed
      * @throws \Exception
      */
-    public function dsCampaignNew($name, $subject,
-                                  $fromName,
-                                  $fromEmail,
-                                  $replyTo,
-                                  $categoryId,
-                                  $country,
-                                  $languageId,
-                                  $html,
-                                  $text,
-                                  $listUnsubscribe = "",
-                                  $utmCampaign = "",
-                                  $utmTerm = "",
-                                  $utmContent = "",
-                                  $footerDs = True,
-                                  $mirrorDs = True
-    )
+    public function dsCampaignNew($name, $subject, $fromName, $fromEmail, $replyTo, $categoryId, $country, $languageId, $html, $text, $listUnsubscribe = "", $utmCampaign = "", $utmTerm = "", $utmContent = "", $footerDs = True, $mirrorDs = True)
     {
-        $results = $this->proxy->webservice('dsCampaignNew',
-            $name,
-            $subject,
-            $fromName,
-            $fromEmail,
-            $replyTo,
-            $categoryId,
-            $country,
-            $languageId,
-            $html,
-            $text,
-            $listUnsubscribe,
-            $utmCampaign,
-            $utmTerm,
-            $utmContent,
-            $footerDs,
-            $mirrorDs);
+        $results = $this->proxy->webservice('dsCampaignNew', $name, $subject, $fromName, $fromEmail, $replyTo, $categoryId, $country, $languageId, $html, $text, $listUnsubscribe, $utmCampaign, $utmTerm, $utmContent, $footerDs, $mirrorDs);
       return $this->processResponse($results);
 
     }
