@@ -58,10 +58,10 @@ class Doctorsender
                                   $languageId,
                                   $html,
                                   $text,
-                                  $listUnsubscribe,
-                                  $utmCampaign,
-                                  $utmTerm,
-                                  $utmContent,
+                                  $listUnsubscribe = "",
+                                  $utmCampaign = "",
+                                  $utmTerm = "",
+                                  $utmContent = "",
                                   $footerDs = True,
                                   $mirrorDs = True
     )
