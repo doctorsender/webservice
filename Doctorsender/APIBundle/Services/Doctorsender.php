@@ -54,9 +54,8 @@ class Doctorsender
      */
     public function dsCampaignNew($name, $subject, $fromName, $fromEmail, $replyTo, $categoryId, $country, $languageId, $html, $text, $listUnsubscribe = "", $utmCampaign = "", $utmTerm = "", $utmContent = "", $footerDs = True, $mirrorDs = True)
     {
-        $results = $this->proxy->webservice('dsCampaignNew', $name, $subject, $fromName, $fromEmail, $replyTo, $categoryId, $country, $languageId, $html, $text, $listUnsubscribe, $utmCampaign, $utmTerm, $utmContent, $footerDs, $mirrorDs);
+      $results = $this->proxy->webservice('dsCampaignNew',array($name, $subject, $fromName, $fromEmail, $replyTo, $categoryId, $country, $languageId, $html, $text, $listUnsubscribe, $utmCampaign, $utmTerm, $utmContent, $footerDs, $mirrorDs));
       return $this->processResponse($results);
-
     }
 
     /**
