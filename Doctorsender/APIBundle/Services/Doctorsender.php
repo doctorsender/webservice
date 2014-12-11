@@ -28,6 +28,7 @@ class Doctorsender
      if (!is_array($response) || !isset($response['msg']) || $response['error'] == 1 ) {
        throw new DoctorsenderResponseException($response);
      }
+     
      return $response['msg'];
    }
 
