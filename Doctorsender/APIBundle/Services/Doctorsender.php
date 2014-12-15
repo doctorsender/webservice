@@ -174,4 +174,22 @@ public function dsCampaignSendList	(	 	$idCampaign,$listName,$ipGroupName,$speed
 
 
 
+  /**
+   * A way to send a simple email
+   *
+   * @param $email              Email address
+   * @param $subject            The subject of your message
+   * @param $from_email         Where the email was recieved
+   * @param $reply_to           Where do you want the email can reply
+   * @param $html               The Html content of your message
+   * @param $alternative_text   The alternative text of the email
+   * @param $link_unsubscribe   The link where the email can be unsubscribed. There must be a link in the Html and text part of the email with this link.
+   * @param $ipGroupName        The ipGroup name where the email will be sent.
+   * @throws mixed
+   */
+  public  function dsToolsSendEmail($email, $subject,$from_email,$reply_to,$html,$alternative_text,$link_unsubscribe, $ipGroupName) {
+    $results = $this->proxy->webservice('dsToolsSendEmail', array(	$email, $subject,$from_email,$reply_to,$html,$alternative_text,$link_unsubscribe, $ipGroupName));
+    return $this->processResponse($results);
+  }
+
 } 
