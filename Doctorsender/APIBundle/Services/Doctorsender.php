@@ -20,7 +20,7 @@ class Doctorsender
         $this->user = $user;
         $this->token = $token;
         $this->proxy = new \SoapClient($this->url, array('trace' => true, 'cache_wsdl' => WSDL_CACHE_NONE));
-        $header      = new SoapHeader("ns1", "app_auth", array("user" => $this->user, "pass" => $this->token));
+        $header      = new \SoapHeader("ns1", "app_auth", array("user" => $this->user, "pass" => $this->token));
         $this->proxy->__setSoapHeaders($header);
     }
 
@@ -28,6 +28,7 @@ class Doctorsender
      if (!is_array($response) || !isset($response['msg']) || $response['error'] == 1 ) {
        throw new DoctorsenderResponseException($response);
      }
+     
      return $response['msg'];
    }
 
